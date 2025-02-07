@@ -7,9 +7,6 @@ import { userIsLogged, validTokenAdministracao } from '../../../utils/fn';
 const CadastroDemo = lazy(
   () => import('../../Gestao/Cadastros/Demo/CadastroDemo/indexCadastroDemo'),
 );
-const CadastroOrdemServico = lazy(
-  () => import('../../Gestao/Cadastros/OrdemServico/CadastroOrdemServico/indexCadastroOrdemServico'),
-)
 
 const RotasCadastro: React.FC<any> = ({ match }) => {
   const validaToken_IntegracaoCadastro = (validaIntegracao: boolean = true) => {
@@ -50,13 +47,6 @@ const RotasCadastro: React.FC<any> = ({ match }) => {
             // ) : (
             //   <Redirect to="/" />
             // )
-          }
-        />
-        <Route
-          path={`${match.path}/ordem-servico`}
-          exact
-          render={
-            () => <CadastroOrdemServico />
           }
         />
       </Switch>
