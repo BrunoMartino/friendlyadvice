@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { setTimeout } from 'timers';
 import {
+  Content,
   DropDownContainer,
   DropDownHeader,
   DropDownList,
@@ -42,6 +43,8 @@ interface ISelect {
   width?: any;
   fontFamily?: any;
   resetForm?: boolean;
+  marginTop?: string;
+  borderless?: boolean;
 }
 
 const SelectBoxSearch: React.FC<ISelect> = ({
@@ -64,6 +67,8 @@ const SelectBoxSearch: React.FC<ISelect> = ({
   reset = false,
   resetForm = false,
   Icon,
+  marginTop,
+  borderless,
 }) => {
   const validateObjects = useCallback(() => {
     let addObj = () => {
@@ -159,18 +164,41 @@ const SelectBoxSearch: React.FC<ISelect> = ({
       //     },
       //   });
     }
+
+    // if (onSetValues) {
+    //   let array = selectorDataKey;
+    //   const result: { [key: string]: any } = {};
+
+    //   for (let i = 0; i < array.length; i++) {
+    //     result[selectorDataKey[i]] = value[i];
+    //   }
+    //   onSetValues((prev: any) => ({
+    //     ...prev,
+    //     [objectKey]: {
+    //       [selectorDataKey[0]]: value[0],
+    //       [selectorDataKey[1]]: value[1],
+    //     },
+    //   }));
+    // }
+
     if (onSetValues) {
       let array = selectorDataKey;
       const result: { [key: string]: any } = {};
 
-      for (let i = 0; i < array.length; i++) {
-        result[selectorDataKey[i]] = value[i];
+      if ('ambiente' in item && Object.keys(item).length > 4) {
+        for (let i = 0; i < array.length; i++) {
+          result[selectorDataKey[i]] = value[i];
+        }
+      } else {
+        for (let i = 0; i < array.length; i++) {
+          result[selectorDataKey[i]] = Object.values(item)[i];
+        }
       }
+
       onSetValues((prev: any) => ({
         ...prev,
         [objectKey]: {
-          [selectorDataKey[0]]: value[0],
-          [selectorDataKey[1]]: value[1],
+          ...result,
         },
       }));
     }
@@ -193,11 +221,9 @@ const SelectBoxSearch: React.FC<ISelect> = ({
       setValue('');
       setSelectedOption([]);
       setNewData([]);
-      setTimeout(() => {
-      }, 100);
+      setTimeout(() => {}, 100);
     }
   }, [reset]);
-
 
   const handleSubmit = () => {
     const valorPesquisado = value;
@@ -252,14 +278,13 @@ const SelectBoxSearch: React.FC<ISelect> = ({
         String(item[selectorDataKey[1]]).trim().toLowerCase().indexOf(value) !==
         -1,
     );
-    if (filtered.length === 0) {
-      return setNewData(() => [...selectorData]);
-    }
+    if (filtered.length === 0) return setNewData(() => [...selectorData]);
+
     return setNewData(filtered);
   };
 
   return (
-    <>
+    <Content marginTop={marginTop}>
       {Icon && (
         <div
           className="icon-left"
@@ -269,6 +294,7 @@ const SelectBoxSearch: React.FC<ISelect> = ({
             top: '3rem',
             left: '1.5rem',
             zIndex: '1',
+            border: 'none',
           }}
         >
           <Icon />
@@ -280,6 +306,7 @@ const SelectBoxSearch: React.FC<ISelect> = ({
         disabled={disabled}
         ref={selectRef}
         styleMethod={styleMethod}
+        borderless={borderless}
       >
         <DropDownHeader
           dontSearch
@@ -289,6 +316,7 @@ const SelectBoxSearch: React.FC<ISelect> = ({
         >
           <div id="divSearch">
             <input
+              // style={{ border: 'none' }}
               id={idInput}
               type="search"
               // style={{width: `${width}`, fontFamily: `${fontFamily}`}}
@@ -347,7 +375,8 @@ const SelectBoxSearch: React.FC<ISelect> = ({
           </DropDownListContainer>
         )}
       </DropDownContainer>
-    </>
+    </Content>
   );
 };
+
 export default SelectBoxSearch;

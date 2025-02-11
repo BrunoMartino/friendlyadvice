@@ -48,7 +48,12 @@ const GridGerenciamentos: React.FC<ListCaxiasProps> = ({
   const size = useWindowSize();
 
   return (
-    <GridContainer className={className} gridCaixas={gridCaixas} overflow={overflow} templateColumns={templateColumns}>
+    <GridContainer
+      className={className}
+      gridCaixas={gridCaixas}
+      overflow={overflow}
+      templateColumns={templateColumns}
+    >
       <ul className="list">
         <li className="list-header">
           <label className="check--header">

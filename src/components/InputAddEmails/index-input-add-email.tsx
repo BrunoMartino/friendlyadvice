@@ -19,18 +19,38 @@ const InputAddEmail = ({
   label,
 }: TInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const firstRender = useRef<boolean>(true);
+
   const [email, setEmail] = useState<string[]>([]);
   const [error, setError] = useState<any>(null);
 
-  const emailSchema = Yup.string()
-    .email('Email inválido')
-    .required('Email é obrigatório');
+  const emailSchema = Yup.string().email('Email inválido');
 
   useEffect(() => {
     if (value && value.length > 0) {
       setEmail(value.split(';'));
     }
   }, [value]);
+
+  const validateEmailBeforeInsert = async () => {
+    if (inputRef.current) {
+      const newEmail = inputRef.current.value.trim();
+
+      if (newEmail.length < 1) return;
+      try {
+        await emailSchema.validate(newEmail);
+        setEmail((prev) => [...prev, newEmail]);
+        inputRef.current.value = '';
+        setError([]);
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          setError(err.message);
+        } else {
+          setError('Erro desconhecido');
+        }
+      }
+    }
+  };
 
   const handleDeleteEmail = (currentEmail: string) => {
     if (email.includes(currentEmail)) {
@@ -39,6 +59,7 @@ const InputAddEmail = ({
         if (emailIndex > -1) {
           prevEmails.splice(emailIndex, 1);
         }
+        setError([]);
         return [...prevEmails];
       });
     }
@@ -46,23 +67,9 @@ const InputAddEmail = ({
 
   const getEmail = useCallback(() => {
     const handleKeyPress = async (e: any) => {
-      if (!inputRef.current) return;
-
       if (e.key === 'Enter') {
         e.preventDefault();
-        const newEmail = inputRef.current.value;
-
-        try {
-          await emailSchema.validate(newEmail);
-          setEmail((prev) => [...prev, newEmail]);
-          inputRef.current.value = '';
-        } catch (err) {
-          if (err instanceof Yup.ValidationError) {
-            setError(err.message);
-          } else {
-            setError('Erro desconhecido');
-          }
-        }
+        validateEmailBeforeInsert();
       }
     };
 
@@ -83,6 +90,17 @@ const InputAddEmail = ({
 
   useEffect(() => {
     getEmail();
+  }, []);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      if (firstRender.current) {
+        inputRef.current.readOnly = true;
+        firstRender.current = false;
+      }
+
+      inputRef.current.readOnly = false;
+    }
   }, []);
 
   return (
@@ -106,10 +124,14 @@ const InputAddEmail = ({
             );
           })}
         <input
-          type="text"
+          autoComplete="off"
           ref={inputRef}
           name={name}
           id={id}
+          onFocus={() => {
+            setError([]);
+          }}
+          onBlur={async () => validateEmailBeforeInsert()}
           onChange={(e) => {
             if (e.target.value === '') {
               setError('');

@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Colors } from '../../../utils/colorsAtualizada';
 import {
   colorText,
@@ -12,18 +12,35 @@ interface ISelectDefaultProps {
   disabled?: boolean;
   dontSearch?: boolean;
   theme?: string;
+  borderless?: boolean;
+  marginTop?: string
 }
 interface liSelectProps {
   padding?: string;
   disabled?: boolean;
-  styleMethod?: string;
+  styleMethod?: string
 }
+
+export const Content = styled.div<ISelectDefaultProps>`
+  border: none;
+  margin-top: ${({ marginTop }) => (marginTop ? marginTop : '')};
+
+  input:focus {
+    outline: none;
+    border: none;
+  }
+`
 
 export const DropDownContainer = styled.div<ISelectDefaultProps>`
   background: '#EBE8E4';
-  border: 0.1rem solid ${borderInput};
+  // border: 0.1rem solid ${borderInput};
+  border: ${({ borderless }) => (borderless ? 'none' : `0.1rem solid ${borderInput}`)};
   position: relative;
   #divSearch {
+    input:focus {
+      outline: none;
+    }
+
     ${({ styleMethod }) =>
       styleMethod === 'vendas' &&
       css`
@@ -174,12 +191,14 @@ export const DropDownHeader = styled('div')<ISelectDefaultProps>`
       /* padding: 0.3rem 0.2rem; */
       padding: 0.3rem 0.2rem;
     }
+
   }
 
   @media screen and (min-width: 650px) {
     /* padding-left: 0.5rem; */
     /* height: 2.7rem; */
   }
+
 
   ${({ styleMethod }) =>
     styleMethod === 'cadastroEmpresa' &&
@@ -291,6 +310,42 @@ export const DropDownHeader = styled('div')<ISelectDefaultProps>`
         }
       }
     `}
+
+      ${({styleMethod}) => styleMethod === 'bubble' && css`
+        input {
+        --border-color: #564f5240;
+        --border-focus: #fca53b;
+        --background-color: #fff;
+        --icon-color: #564f5280;
+        --icon-focus: #fca53b;
+        --input-width: 100%;
+        --input-height: 3.3rem;
+
+        display: flex;
+        align-items: center;
+        
+
+        font-weight: 500;
+        -webkit-transition: 200ms ease-in-out;
+        transition: 200ms ease-in-out;
+        background-color: var(--background-color);
+        padding: 1rem;
+        width: var(--input-width);
+        height: var(--input-height);
+        overflow: hidden;
+
+        font-style: normal;
+        font-weight: 500;
+        font-size: 1.4rem;
+        line-height: 2rem;
+        box-shadow: none;
+
+        &:focus-within {
+          border: 0.1rem solid red !important;
+          border: none !important;
+        } 
+      }
+      `}
 
     ${({ styleMethod }) =>
     styleMethod === 'cadastros' &&

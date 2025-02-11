@@ -17,6 +17,7 @@ interface ISearchAutoComplete {
   onChange?: ({ ...args }) => void;
   tamanho?: string;
   ref?: any;
+  readOnly?: boolean;
 }
 
 const SearchAutoComplete: React.FC<any> = React.forwardRef(
@@ -33,6 +34,7 @@ const SearchAutoComplete: React.FC<any> = React.forwardRef(
       maximumLength,
       tamanho,
       disabled,
+      readOnly = false,
     },
     ref,
   ) => {
@@ -51,6 +53,7 @@ const SearchAutoComplete: React.FC<any> = React.forwardRef(
           maxLength={maximumLength ? maximumLength : 100}
           ref={ref}
           disabled={disabled}
+          readOnly={readOnly}
         />
         {!disabled && handleSearch && (
           <ButtonSearch className="search-icon" onClick={handleSearch}>

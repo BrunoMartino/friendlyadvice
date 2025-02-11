@@ -9,11 +9,13 @@ import {
   Modal,
   ModalContent,
   TituloPagina,
+  TotalsContainer,
 } from './styleCabecalhoTelaFlutter';
 import { FiFilter } from 'react-icons/fi';
 import useWindowSize from '../../hooks/useWindowSize';
-import { FaArrowLeft } from 'react-icons/fa';
 import { useDetectOS } from '../../hooks/use-detect-os';
+import FilterSideMenu from '../FilterSideMenu';
+import Filter from '../Filter';
 
 export enum ETypeCabecalho {
   CADASTRO = 'cadastro',
@@ -33,8 +35,13 @@ type TProps = {
   children?: React.ReactNode;
   footerContent?: React.ReactNode;
   padding?: string;
-  button?: React.ReactNode;
-  height?: string;
+  style?: object;
+  btnDisabled?: any;
+  setSql?: any;
+  changeSalvarText?: string;
+  hasTotals?: boolean;
+  checkedList?: Array<Record<string, any>>;
+  isOSPage?: boolean;
 };
 
 const CabecalhoTelaFlutter = ({
@@ -50,13 +57,19 @@ const CabecalhoTelaFlutter = ({
   children,
   footerContent,
   padding,
-  button,
-  height,
+  style,
+  btnDisabled,
+  setSql,
+  changeSalvarText,
+  hasTotals,
+  checkedList,
+  isOSPage,
 }: TProps) => {
   const system = useDetectOS();
   const size = useWindowSize();
   const mobileMode = size.width! / 16 <= 50;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showTotals, setShowTotals] = useState(false);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -66,29 +79,71 @@ const CabecalhoTelaFlutter = ({
     setIsModalOpen(false);
   };
 
+  const handleApplyFilters = (filters: any) => {
+    setSql(filters);
+  };
+
   if (typeCabecalho === ETypeCabecalho.LISTAGEM) {
     return (
-      <Container system={system} height={height}>
-        <Cabecalhotela padding={padding}>
+      <Container system={system} style={{ backgroundColor: 'white' }}>
+        <Cabecalhotela padding={padding} style={style}>
           <TituloPagina>
             <Caminho>{breadcrumbs}</Caminho>
-            <AddButton onClick={handleClickPlus}>
-              <span>+</span>
-            </AddButton>
+            <AddButton onClick={handleClickPlus}>+</AddButton>
           </TituloPagina>
+          {!mobileMode && (
+            <>
+              <ContainerPesquisa>{areaWithoutBtns}</ContainerPesquisa>
+              <ContainerPesquisa>
+                {areaWithBtns}
+                <div className="btns-container">
+                  <button onClick={handleClickSearch}>Pesquisar</button>
+                  <button onClick={handleClickClear}>Limpar</button>
+                </div>
+              </ContainerPesquisa>
+            </>
+          )}
         </Cabecalhotela>
-        {children}
+        <div className="content-children">{children}</div>
+        {showTotals && checkedList && checkedList.length === 0 && (
+          <TotalsContainer>{footerContent}</TotalsContainer>
+        )}
         <Footer displayMobile={mobileMode}>
           {mobileMode ? (
             <>
-              <div></div>
-              <div className={mobileMode ? 'filtro' : ''} onClick={openModal}>
-                <p>
-                  <FiFilter style={{ width: '1.7rem', height: '1.7rem' }} />
-                  filtros e busca
-                </p>
-              </div>
-              <div></div>
+              {checkedList && checkedList.length > 0 ? (
+                <>{footerContent}</>
+              ) : (
+                <>
+                  {hasTotals && (
+                    <div
+                      className={mobileMode ? 'filtro' : ''}
+                      style={{
+                        position: 'absolute',
+                        left: '0',
+                        marginLeft: '1.4rem',
+                        width: '8rem',
+                      }}
+                      onClick={() => {
+                        setShowTotals(!showTotals);
+                      }}
+                    >
+                      <p>totais</p>
+                    </div>
+                  )}
+                  <div
+                    className={mobileMode ? 'filtro' : ''}
+                    onClick={() => {
+                      openModal();
+                    }}
+                  >
+                    <p>
+                      <FiFilter style={{ width: '1.7rem', height: '1.7rem' }} />
+                      filtros e busca
+                    </p>
+                  </div>
+                </>
+              )}
             </>
           ) : (
             <>{footerContent}</>
@@ -97,26 +152,28 @@ const CabecalhoTelaFlutter = ({
         {isModalOpen && (
           <Modal>
             <ModalContent>
-              <ContainerPesquisa modal={isModalOpen}>
-                {areaWithoutBtns}
-                {areaWithBtns}
-              </ContainerPesquisa>
-              <div className="btns-container">
-                <button onClick={closeModal}>
-                  <span>
-                    <FaArrowLeft /> voltar
-                  </span>
-                </button>
-                <button className="btnFilter" onClick={handleClickSearch}>
-                  <span>
-                    <FiFilter style={{ width: '1.4rem', height: '1.4rem' }} />{' '}
-                    aplicar filtros
-                  </span>
-                </button>
-                <button onClick={handleClickClear}>
-                  <span>limpar</span>
-                </button>
-              </div>
+              {isOSPage ? (
+                <FilterSideMenu
+                  topMobile={false}
+                  backOnClick={() => closeModal()}
+                  setSqlFilters={handleApplyFilters}
+                  handleSetStorage={(data) => {
+                    localStorage.setItem('savedFilters', JSON.stringify(data));
+                  }}
+                />
+              ) : (
+                <Filter
+                  backOnClick={() => closeModal()}
+                  applyFilters={() => handleClickSearch!()}
+                  clearFilters={() => handleClickClear!()}
+                  children={
+                    <>
+                      {areaWithoutBtns}
+                      {areaWithBtns}
+                    </>
+                  }
+                />
+              )}
             </ModalContent>
           </Modal>
         )}
@@ -124,7 +181,7 @@ const CabecalhoTelaFlutter = ({
     );
   } else {
     return (
-      <Container system={system} height={height}>
+      <Container system={system}>
         <Cabecalhotela padding={padding}>
           <TituloPagina>
             <Caminho>{breadcrumbs}</Caminho>
@@ -135,8 +192,12 @@ const CabecalhoTelaFlutter = ({
           <button onClick={handleClickVoltar} className="btn-voltar">
             voltar
           </button>
-          <button onClick={handleClickSalvar} className="btn-salvar">
-            salvar
+          <button
+            disabled={btnDisabled}
+            onClick={handleClickSalvar}
+            className="btn-salvar"
+          >
+            {changeSalvarText ? changeSalvarText : 'salvar'}
           </button>
         </Footer>
       </Container>

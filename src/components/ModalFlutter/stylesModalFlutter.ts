@@ -1,11 +1,8 @@
 import styled, { css } from 'styled-components';
 
-import {
-  borderInputFocus,
-  colorWhite,
-} from '../../utils/colorsInpera';
+import { borderInputFocus, colorWhite } from '../../utils/colorsInpera';
 
-export const ContentModalOpen = styled.div`
+export const ContentModalOpen = styled.div<any>`
   user-select: none;
 
   padding: 0.8rem;
@@ -30,6 +27,13 @@ export const ContentModalOpen = styled.div`
         width: 1.1rem;
         height: 1.1rem;
         color: ${colorWhite};
+
+        ${({ mobileMode }) =>
+          mobileMode &&
+          css`
+            width: 2.2rem;
+            height: 2.2rem;
+          `}
       }
 
       :hover {
@@ -50,6 +54,11 @@ export const ContentModalOpen = styled.div`
     flex-direction: column;
     margin-top: 1.6rem;
     gap: 0.6rem;
+    ${({ mobileMode }) =>
+      mobileMode &&
+      css`
+        gap: 1.6rem;
+      `}
     padding-left: 0.6rem;
     align-items: start;
 

@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { shade } from 'polished';
 import signInBackgroundImg from '../../../assets/sign-in-background.png';
 import {
@@ -12,7 +12,6 @@ export const Container = styled.div<any>`
   display: flex;
   height: 100vh;
 
-  /* background: url(${signInBackgroundImg}) no-repeat right; */
   background: url(${signInBackgroundImg}) no-repeat center;
 
   background-size: contain;

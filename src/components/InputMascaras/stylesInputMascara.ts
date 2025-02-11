@@ -16,6 +16,7 @@ interface propsInput {
 }
 
 export const Container = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
 
@@ -39,15 +40,12 @@ export const Container = styled.div`
 export const ContainerInput = styled.input<propsInput>`
   width: ${(props: any) => (props.tamanho ? props.tamanho : '20rem')};
   height: 2.7rem;
-  background: ${({ backgroundColor }) =>
-    backgroundColor ? backgroundColor : backgroundInperaInput};
+  background: ${({ backgroundColor }) => backgroundColor ? backgroundColor : backgroundInperaInput};
   border: 0.15rem solid ${borderInput};
   color: ${colorText};
   font-weight: 400;
-  text-align: ${(props: any) =>
-    props.alinhamento ? props.alinhamento : 'start'};
+  text-align: ${(props: any) => props.alinhamento ? props.alinhamento : 'start'};
   margin-top: ${(props: any) => (props.marginTop ? props.marginTop : '0.5rem')};
-
   padding: 0 0.5rem;
   font-size: 1.4rem;
 

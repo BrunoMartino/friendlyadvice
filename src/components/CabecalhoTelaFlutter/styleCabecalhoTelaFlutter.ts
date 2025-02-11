@@ -6,13 +6,9 @@ export const Container = styled.div<any>`
   display: flex;
   flex-direction: column;
 
-  height: inherit;
-  ${({ height }) =>
-    height &&
-    css`
-      height: ${height};
-    `}
-
+  /* height: inherit; */
+  height: 92vh;
+  
   font-family: 'Poppins', sans-serif;
 
   padding-top: 1rem;
@@ -35,6 +31,13 @@ export const Container = styled.div<any>`
     max-width: 31.5rem;
     flex-wrap: nowrap;
     min-width: 10rem;
+  }
+
+  .content-children {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    // height: 100vh;
   }
 `;
 
@@ -71,6 +74,10 @@ export const Caminho = styled.div`
       color: ${borderInputFocus};
       cursor: pointer;
     }
+
+    :last-child {
+      color: #d0944b;
+    }
   }
 `;
 
@@ -86,11 +93,9 @@ export const AddButton = styled.button`
     background-color: #c08845;
   }
 
-  span {
-    font-family: 'Poppins';
-    font-size: 2.3rem;
-    font-weight: 500;
-  }
+  font-family: 'Poppins';
+  font-size: 2.3rem;
+  font-weight: 500;
 `;
 
 export const ContainerPesquisa = styled.div<any>`
@@ -101,7 +106,6 @@ export const ContainerPesquisa = styled.div<any>`
   ${({ modal }) =>
     modal &&
     css`
-      display: flex;
       flex-direction: column;
       padding-top: 0;
       align-items: flex-start;
@@ -126,6 +130,7 @@ export const ContainerPesquisa = styled.div<any>`
     min-width: 30rem;
     display: flex;
     gap: 0.8rem;
+    align-items: center;
 
     button {
       color: ${colorWhite};
@@ -139,11 +144,9 @@ export const ContainerPesquisa = styled.div<any>`
         background-color: #c08845;
       }
 
-      span {
-        font-family: 'Poppins';
-        font-size: 1.6rem;
-        font-weight: 500;
-      }
+      font-family: 'Poppins';
+      font-size: 1.6rem;
+      font-weight: 500;
     }
   }
 `;
@@ -156,11 +159,7 @@ export const Footer = styled.div<any>`
   height: 6rem;
   display: flex;
   justify-content: flex-end;
-  ${({ displayMobile }) =>
-    displayMobile &&
-    css`
-      justify-content: space-between;
-    `}
+
   gap: 1.2rem;
   align-items: center;
   border-top: 2px solid #dfdfdf;
@@ -177,11 +176,9 @@ export const Footer = styled.div<any>`
     `}
 
   div {
-    display: flex;
     flex-direction: column;
     justify-content: center;
     height: 4rem;
-    width: 7rem;
 
     p {
       font-family: 'Poppins';
@@ -195,14 +192,16 @@ export const Footer = styled.div<any>`
 
   .filtro {
     display: flex;
-    justify-content: center;
     align-items: center;
     width: 15rem;
+    border: 1px solid ${borderInputFocus};
+    border-radius: 8px;
+    margin: 0 auto;
+
     @media (max-width: 460px) {
       width: 12rem;
     }
-    border: 1px solid ${borderInputFocus};
-    border-radius: 8px;
+
     p {
       color: ${borderInputFocus};
     }
@@ -228,6 +227,11 @@ export const Footer = styled.div<any>`
     width: 11rem;
     background: ${borderInputFocus};
     color: ${colorWhite};
+
+    :disabled {
+      opacity: 0.7;
+      cursor: default;
+    }
   }
 `;
 
@@ -240,7 +244,51 @@ export const Modal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100000;
+  /* z-index: 100000; */
+  z-index: 99998;
+`;
+
+export const TotalsContainer = styled.div<any>`
+  font-family: 'Poppins';
+  position: sticky;
+  bottom: 6rem;
+  left: 0;
+  height: 6rem;
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 1.2rem;
+  align-items: center;
+  border-top: 2px solid #dfdfdf;
+  padding: 1rem 2.5rem 1rem 2.5rem;
+  background-color: white;
+
+  transform: translateY(100%);
+  animation: slideUp 0.5s ease-out forwards;
+
+  div {
+    flex-direction: column;
+    justify-content: center;
+    height: 4rem;
+
+    p {
+      font-family: 'Poppins';
+      color: black;
+      font-size: 1.4rem;
+      @media (max-width: 460px) {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
 `;
 
 export const ModalContent = styled.div`
@@ -249,7 +297,6 @@ export const ModalContent = styled.div`
   width: 100%;
   max-width: 100%;
   height: 100%;
-  display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
@@ -260,8 +307,6 @@ export const ModalContent = styled.div`
     left: 0;
     padding: 2rem;
     width: 100%;
-
-    display: flex;
     justify-content: space-between;
 
     button {
@@ -279,7 +324,7 @@ export const ModalContent = styled.div`
       background-color: ${borderInputFocus};
       border-radius: 20px;
       height: 3rem;
-      width: 14rem;
+      width: 46rem;
 
       span {
         color: white;

@@ -15,6 +15,12 @@ import { CabecalhoTelaProps, TipoCabecalho } from './interfaceCabecalhoTela';
 import { BiPrinter, BiSearchAlt } from 'react-icons/bi';
 import { FaTrashAlt } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  setDataPaginacao,
+  setFiltroSelecionado,
+  setLimparPesquisa,
+  setValorPesquisado,
+} from '../../store/modules/Components/Paginacao/action';
 import { validTokenAdministracao } from '../../utils/fn';
 import SelectBoxSearch from '../SelectBox/SelectBox-Search/SelectBox-Search';
 import { useDetectOS } from '../../hooks/use-detect-os';
@@ -41,6 +47,17 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
   const filtroSelecionado = useSelector(
     (state: any) => state.session.paginacao.filtroSelecionado,
   );
+
+  const handleChange = (valorPesquisado: any) => {
+    if (valorPesquisado && valorPesquisado.length > 0) {
+      dispatch(setValorPesquisado(valorPesquisado));
+    } else {
+      if (props.url && props.origem) {
+        dispatch(setLimparPesquisa());
+        dispatch(setDataPaginacao(props.url, 0, props.origem));
+      }
+    }
+  };
 
   const handleEscape = (e: any) => {
     if (props.handleCancelar) {
@@ -84,11 +101,9 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
             </TitlePage>
             <SubTitlePage>
               <span className="subtitle">
-                <span className="text ">
-                  {props.descricaoSubTitle.length > 26
-                    ? props.descricaoSubTitle.substring(0, 26) + '...'
-                    : props.descricaoSubTitle}
-                </span>
+                <span className="text ">{props.descricaoSubTitle.length > 26
+                  ? (props.descricaoSubTitle.substring(0, 26) + "...")
+                  : props.descricaoSubTitle}</span>
               </span>
             </SubTitlePage>
           </TitleContainer>
@@ -103,11 +118,7 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
         {props.tipo === TipoCabecalho.CADASTRO ? (
           <ButtonActions breakWidth={breakWidth}>
             <button
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               type="button"
               onClick={props.handleCancelar}
               className="btn cancel"
@@ -157,13 +168,13 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
                     props.valorDiferenciado ||
                     tokenAdm ||
                     props.disabled ||
-                    props.newBtnDisabled) &&
-                  !props.newBtnInvisible
+                    props.newBtnDisabled)
+                    && !props.newBtnInvisible
                     ? 0.35
                     : props.newBtnInvisible
-                    ? 0
-                    : 1,
-                cursor: props.newBtnInvisible ? 'default' : 'pointer',
+                      ? 0
+                      : 1,
+                cursor: props.newBtnInvisible ? 'default' : 'pointer'
               }}
             >
               + Novo
@@ -176,8 +187,8 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
           {hasMoreField ? (
             <Section hasMoreField={hasMoreField}>
               {props.select &&
-              props.select.data &&
-              props.select.data.length > 0 ? (
+                props.select.data &&
+                props.select.data.length > 0 ? (
                 <div style={{ marginRight: '0.5rem' }}>
                   <SelectBoxSearch
                     idInput="filtro"
@@ -185,7 +196,13 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
                     padding={'1rem 0.5rem'}
                     selectorData={props.select.data}
                     selectorDataKey={['id', 'descricao', 'inputValue']}
-                    onFieldSet={(e) => {}}
+                    onFieldSet={(e) => {
+                      dispatch(
+                        setFiltroSelecionado({
+                          filtro: { ...e.filtro, origem: props.origem },
+                        }),
+                      );
+                    }}
                     objectKey={'filtro'}
                     placeholder={
                       props.selectPlaceholder
@@ -205,7 +222,9 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
                   readOnly={props.handlePesquisar === undefined}
                   id="search"
                   value={props.valuePesquisado ? props.valuePesquisado : ''}
-                  onChange={(e: any) => {}}
+                  onChange={(e: any) => {
+                    handleChange(e.target.value);
+                  }}
                   style={{
                     opacity: props.handlePesquisar === undefined ? 0.35 : 1,
                   }}
@@ -259,7 +278,9 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
                 readOnly={props.handlePesquisar === undefined}
                 id="search"
                 value={props.valuePesquisado ? props.valuePesquisado : ''}
-                onChange={(e: any) => {}}
+                onChange={(e: any) => {
+                  handleChange(e.target.value);
+                }}
                 style={{
                   opacity: props.handlePesquisar === undefined ? 0.35 : 1,
                 }}
@@ -322,14 +343,14 @@ const CabecalhoTela: React.FC<CabecalhoTelaProps> = ({
                 marginLeft: '1rem',
                 opacity:
                   !props.handleRemove ||
-                  tokenAdm ||
-                  (configuracoesEmpresa &&
-                    configuracoesEmpresa.precoDiferenciado &&
-                    empresaAdmin &&
-                    empresaAdmin.integracaoFacilite)
+                    tokenAdm ||
+                    (configuracoesEmpresa &&
+                      configuracoesEmpresa.precoDiferenciado &&
+                      empresaAdmin &&
+                      empresaAdmin.integracaoFacilite)
                     ? 0.4
                     : 1,
-                cursor: props.newBtnInvisible ? 'default' : 'pointer',
+                cursor: props.newBtnInvisible ? 'default' : 'pointer'
               }}
             />
           </Icons>

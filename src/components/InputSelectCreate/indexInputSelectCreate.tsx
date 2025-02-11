@@ -20,6 +20,7 @@ import {
 import './stylesInputSelectCreate.css';
 import { validCharacters } from '../../utils/fn';
 import { makeStyles } from '@material-ui/styles';
+import { FaPen } from 'react-icons/fa';
 
 const theme = createTheme({
   overrides: {
@@ -120,16 +121,6 @@ const themeFinancas = createTheme({
   },
 });
 
-const useStyles = makeStyles({
-  endAdornment: {
-    top: 'calc(3.3rem - 2.4rem) !important',
-    display: 'flex',
-    justifyContent: 'center',
-    right: '0 !important',
-    width: '5rem !important',
-  },
-});
-
 const filter = createFilterOptions<any>();
 
 const InputSelectCreate: React.FC<InputSelectProps> = ({
@@ -158,16 +149,43 @@ const InputSelectCreate: React.FC<InputSelectProps> = ({
   maxLength,
   financasTheme = false,
   onKeyPress,
+  marginTop,
+  handleEdit,
+  onSelect,
   ...props
 }) => {
+  const useStyles = makeStyles({
+    endAdornment: {
+      // top: 'calc(3.3rem - 2.4rem) !important',
+      display: 'flex',
+      justifyContent: 'center',
+      right: '0 !important',
+      width:
+        handleEdit && value.id && value.descricao
+          ? '9rem !important'
+          : '5rem !important',
+    },
+    pencilIcon: {
+      position: 'relative',
+      width: '1.5rem',
+      height: '1.5rem',
+      cursor: 'pointer',
+      color: '#000000',
+      left: '100%',
+    },
+  });
+
   const classes = useStyles();
 
   return (
     <div
       className={useMargin ? 'marginComponente' : ''}
-      style={{ opacity: disabled ? 0.7 : 1 }}
+      style={{
+        opacity: disabled ? 0.7 : 1,
+        marginTop: marginTop ? marginTop : '',
+      }}
     >
-      <Autocomplete
+      <Autocomplete      
         classes={{ endAdornment: financasTheme ? classes.endAdornment : '' }}
         value={value}
         id={id}
@@ -297,12 +315,25 @@ const InputSelectCreate: React.FC<InputSelectProps> = ({
               // inputProps={{
               //   maxLength: props.maxLength,
               // }}
+              InputProps={{
+                ...params.InputProps,
+                ...(handleEdit &&
+                  value.id &&
+                  value.descricao && {
+                    endAdornment: (
+                      <FaPen
+                        className={`${classes.pencilIcon} ${classes.endAdornment}`}
+                        onClick={handleEdit}
+                      />
+                    ),
+                  }),
+              }}
             />
           </MuiThemeProvider>
         )}
         onKeyPress={onKeyPress}
+        onSelect={onSelect}
       />
-
       <Dialog
         open={open}
         onClose={() => setOpen(false)}

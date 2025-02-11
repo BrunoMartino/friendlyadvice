@@ -25,7 +25,6 @@ const Route: React.FC<RouteProps> = ({
     <ReactDOMRoute
       {...rest}
       render={({ location }) => {
-        console.log('isPrivate === !!token: ', isPrivate === !!token)
         return isPrivate === !!token ? (
           <Component />
         ) : (

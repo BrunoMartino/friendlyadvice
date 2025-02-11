@@ -2,14 +2,6 @@ import React, { createContext, useCallback, useState, useContext } from 'react';
 import jwt from 'jsonwebtoken';
 import api from '../services/api';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-// import { abrirMensagem } from '../store/modules/SnackBar/action';
-// import { TipoMensagem } from '../components/SnackBar/interface';
-// import trataExcecao from '../utils/tratamentoExcecao';
-
-interface Token {
-  id: string;
-}
 
 interface AuthState {
   token: string;
@@ -29,9 +21,7 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
-  // const dispatch = useDispatch();
   const history = useHistory();
-  // DATA = Dados de Autenticação
   const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem('@INPERA:token');
 
@@ -70,7 +60,6 @@ const AuthProvider: React.FC = ({ children }) => {
     if (tokenCheck) {
       localStorage.setItem('@INPERA:token', token);
       api.defaults.headers.authorization = `Bearer ${token}`;
-      history.push('/listagem/demo');
     } else {
       throw new Error('Token não validado.');
     }

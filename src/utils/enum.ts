@@ -21,3 +21,7 @@ export enum TypePaymentMethodMercadoPago {
   voucher_card = 'Benefícios Alelo/Sodexo',
   crypto_transfer = 'Criptomoedas',
 }
+
+export enum Licenca {
+  WHATS_APP_CHAT_AI = 36
+}

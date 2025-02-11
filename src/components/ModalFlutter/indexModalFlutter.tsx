@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import useWindowSize from '../../hooks/useWindowSize';
 import { ContentModalOpen } from './stylesModalFlutter';
 import { FaEllipsisH } from 'react-icons/fa';
+import { IoIosClose } from 'react-icons/io';
 
 interface ModalFlutterProps {
   visible: boolean;
@@ -16,7 +17,7 @@ const ModalFlutter: React.FC<ModalFlutterProps> = ({
   position,
   titleModal,
   onClose,
-  optionsMenuModal
+  optionsMenuModal,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -61,31 +62,35 @@ const ModalFlutter: React.FC<ModalFlutterProps> = ({
       <div
         ref={modalRef}
         style={{
-          position: 'absolute',
-          top: position.top - 17.5,
-          left: mobileMode ? position.left : position.left + 17,
+          position: mobileMode ? 'fixed' : 'absolute',
+          top: mobileMode ? '50%' : position.top - 17.5,
+          left: mobileMode ? '50%' : position.left + 17,
+          transform: mobileMode ? 'translate(-50%, -50%)' : '',
+          width: 'max-content',
           backgroundColor: 'white',
           zIndex: 99999,
           padding: '10px',
           borderRadius: '8px',
         }}
       >
-        <ContentModalOpen>
+        <ContentModalOpen mobileMode={mobileMode}>
           <div
             className="titleModal"
             style={{ display: 'flex', alignItems: 'center', gap: '14px' }}
           >
             <div className="menuModal">
               <div onClick={onClose}>
-                <FaEllipsisH className="iconMenuModal" />
+                {mobileMode ? (
+                  <IoIosClose className="iconMenuModal" />
+                ) : (
+                  <FaEllipsisH className="iconMenuModal" />
+                )}
               </div>
             </div>
             <p>{titleModal}</p>
           </div>
 
-          <div className="optionsMenuModal">
-            {optionsMenuModal}
-          </div>
+          <div className="optionsMenuModal">{optionsMenuModal}</div>
         </ContentModalOpen>
       </div>
     </>

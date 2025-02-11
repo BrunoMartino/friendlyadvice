@@ -1,5 +1,5 @@
 import { Dropdown } from 'react-bootstrap';
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { MenuAcaoProps } from './interfaceMenuAcao';
 import './menuAcaoStyles.css';
 import {
@@ -9,41 +9,66 @@ import {
   borderInput,
 } from '../../../utils/colorsInpera';
 import { useHistory } from 'react-router-dom';
-
 import { IoIosArrowDown } from 'react-icons/io';
+import { useSelector } from 'react-redux';
+import { menus_remover, validarMenuLicencas37_38 } from './validacao-licencas';
+
+function applyFilter(data: any): Promise<any> {
+  return new Promise((res) => {
+    const dataWithFilter = data.filter(
+      (item: any) => !menus_remover.includes(item.nome),
+    );
+    res(dataWithFilter);
+  });
+}
 
 const MenuAcao: React.FC<MenuAcaoProps> = ({ isUser, ...props }) => {
+  let menuItens = props.menuItens;
+  const licencas = useSelector(
+    (state: any) => state.global.empresaLicencas.licencas,
+  );
+  const empDoc = useSelector((state: any) => state.global.empresaAdmin.cnpjCPF);
   const history = useHistory();
+
+  useEffect(() => {
+    const execFilter = async () => {
+      await applyFilter(menuItens);
+    };
+    if (validarMenuLicencas37_38(licencas, empDoc)) {
+      execFilter();
+    }
+  }, [licencas, empDoc]);
 
   return (
     <div className="Container">
-      <Dropdown className='teste' onClick={props.handleOpen}>
-          {/* {console.log(props.isOpen, 'props.isOpen')} */}
-          <Dropdown.Toggle
-            className={!props.isOpen ? 'conteudo-rotacionado' : 'conteudo'}
-            //onClick={teste}
-            variant={backgroundInpera}
-            id="dropdown-basic"
-            style={{
-              // transform: rotacionado ? 'rotateZ(180deg)' : 'rotateZ(360deg)',
-              display: props.icon !== <IoIosArrowDown /> ? 'flex' : 'flex',
-              width: isUser ? '180px' : 'auto',
-              fontSize: isUser ? '1.5rem' : '',
-              color: isUser ? '#2C2F38' : '',
-              alignItems: props.icon !== <IoIosArrowDown /> ? 'center' : '',
-              justifyContent:
-                props.icon !== <IoIosArrowDown /> ? 'space-between' : '',
-              paddingRight: isUser ? '' : '20px',
-            }}
-          >
-            {props.nomeMenu ? props.nomeMenu : props.icon}
-          </Dropdown.Toggle>
+      <Dropdown className="teste" onClick={props.handleOpen}>
+        <Dropdown.Toggle
+          className={!props.isOpen ? 'conteudo-rotacionado' : 'conteudo'}
+          //onClick={teste}
+          variant={backgroundInpera}
+          id="dropdown-basic"
+          style={{
+            // transform: rotacionado ? 'rotateZ(180deg)' : 'rotateZ(360deg)',
+            display: props.icon !== <IoIosArrowDown /> ? 'flex' : 'flex',
+            width: isUser ? '180px' : 'auto',
+            fontSize: isUser ? '1.5rem' : '',
+            color: isUser ? '#2C2F38' : '',
+            alignItems: props.icon !== <IoIosArrowDown /> ? 'center' : '',
+            justifyContent:
+              props.icon !== <IoIosArrowDown /> ? 'space-between' : '',
+            paddingRight: isUser ? '' : '20px',
+          }}
+        >
+          {props.nomeMenu ? props.nomeMenu : props.icon}
+        </Dropdown.Toggle>
 
         <Dropdown.Menu className={isUser ? 'teste' : 'teste-dois'}>
-          {props.menuItens &&
+          {/* {props.menuItens &&
             props.menuItens.length > 0 &&
-            props.menuItens.map((menu: any, index: any) => {
-
+            props.menuItens.map((menu: any, index: any) => { */}
+          {menuItens &&
+            menuItens.length > 0 &&
+            menuItens.map((menu: any, index: any) => {
               return (
                 <Fragment key={index}>
                   <Dropdown.Item

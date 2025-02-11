@@ -23,6 +23,13 @@ export class Validation {
     try {
       const resultados = await Promise.all(promisses);
 
+      // if (
+      //   !resultados.every((resultado) => resultado) &&
+      //   this.CustomErrorAllowance.customError
+      // ) {
+      //   this.cbFunction(this.CustomErrorAllowance.messageError);
+      // }
+
       return resultados.every((resultado) => resultado);
     } catch (error) {
       return false;

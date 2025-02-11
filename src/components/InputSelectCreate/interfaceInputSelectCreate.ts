@@ -24,5 +24,8 @@ export interface InputSelectProps {
   maxLength?: any;
   onFocus?: any;
   financasTheme?: boolean;
-  onKeyPress?: any;
+  onKeyPress?: any
+  marginTop?: any
+  handleEdit?: () => void;
+  onSelect?: () => void;
 }

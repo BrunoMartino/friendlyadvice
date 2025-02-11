@@ -6,13 +6,14 @@ import flatMap from 'lodash/flatMap';
 import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
 
-// import { abrirMensagem } from '../store/modules/Components/SnackBar/action';
-// import { TipoMensagem } from '../components/SnackBar/interface';
+import { abrirMensagem } from '../store/modules/Components/SnackBar/action';
+import { TipoMensagem } from '../components/SnackBar/interface';
 // import { setLogoutCliente } from '../store/modules/ClienteLogado/actions';
 import moment from 'moment';
 import { apiCEP } from '../services/api';
 import { yellowMainColor } from './colors';
 import axios from 'axios';
+import { DateTime } from 'luxon';
 
 interface IFormatarData {
   dia: number;
@@ -386,7 +387,6 @@ export const REGEX = /^[1-9]{1}[0-9]*$/;
 export const REGEX_NUMBER = /^[0-9]*$/;
 export const REGEX_PERCENT = /^[0-9][0-9]?$|^100$/;
 export const REGEX_VALOR_MONETARIO = /^\d*,?\d{0,2}$/;
-export const REGEX_VALOR_DECIMAL_3 = /^\d*,?\d{0,3}$/;
 export const REGEX_VALUE_DECIMAL_100 = /^\d{0,3},?\d{0,2}?$/;
 export const REGEX_PERCENT_DECIMAL =
   /^((100((\,)[0-9]{1,2})?)|([0-9]{1,2}((\,)[0-9]{0,2})?))$/;
@@ -400,13 +400,13 @@ export const checkTokenRenderiza = (dispatch: any, history: any) => {
     result = true;
   } else {
     result = false;
-    // dispatch(
-    //   abrirMensagem({
-    //     open: true,
-    //     mensagem: 'Sessão Expirada, faça o login =D',
-    //     tipo: TipoMensagem.ERRO,
-    //   }),
-    // )
+    dispatch(
+      abrirMensagem({
+        open: true,
+        mensagem: 'Sessão Expirada, faça o login =D',
+        tipo: TipoMensagem.ERRO,
+      }),
+    );
     history.push('/');
   }
   return result;
@@ -514,25 +514,25 @@ export const validarItensCarrinho_UsuarioLogado = (
     return true;
   } else {
     if (!usuarioLogado) {
-      // dispatch(
-      //   abrirMensagem({
-      //     open: true,
-      //     mensagem:
-      //       'Rota não permitida, faça o login para acessar essa página.',
-      //     tipo: TipoMensagem.INFO,
-      //   }),
-      // );
+      dispatch(
+        abrirMensagem({
+          open: true,
+          mensagem:
+            'Rota não permitida, faça o login para acessar essa página.',
+          tipo: TipoMensagem.INFO,
+        }),
+      );
 
       return false;
     } else if (carrinho.length <= 0) {
-      // dispatch(
-      //   abrirMensagem({
-      //     open: true,
-      //     mensagem:
-      //       'Rota não permitida, não existem itens no carrinho para acessar essa página.',
-      //     tipo: TipoMensagem.INFO,
-      //   }),
-      // );
+      dispatch(
+        abrirMensagem({
+          open: true,
+          mensagem:
+            'Rota não permitida, não existem itens no carrinho para acessar essa página.',
+          tipo: TipoMensagem.INFO,
+        }),
+      );
 
       return false;
     }
@@ -607,13 +607,13 @@ export const searchCep = async (valorDigitado: any, dispatch: any) => {
   );
 
   if (data.erro) {
-    // dispatch(
-    //   abrirMensagem({
-    //     open: true,
-    //     mensagem: 'CEP não localizado na base dos correios!',
-    //     tipo: TipoMensagem.ERRO,
-    //   }),
-    // );
+    dispatch(
+      abrirMensagem({
+        open: true,
+        mensagem: 'CEP não localizado na base dos correios!',
+        tipo: TipoMensagem.ERRO,
+      }),
+    );
     // return data;
     // throw new Error('CEP não localizado na base dos correios!');
   }
@@ -829,6 +829,7 @@ export const getNextStatusByOrder = (
   field: string,
   order: any,
   setOrder: any,
+  orderByOne = false,
 ) => {
   let result: any;
   if (actualStatus === Order.NULL) {
@@ -840,18 +841,28 @@ export const getNextStatusByOrder = (
   }
   const idx = order.findIndex((el: any) => el.field === field);
 
-  if (idx >= 0) {
-    setOrder((prev: any) => {
+  if (orderByOne) {
+    setOrder(() => {
       if (result.status === Order.NULL) {
-        return prev.filter((el: any) => el.field !== field);
+        return [];
       } else {
-        const data = prev;
-        data[idx] = result;
-        return [...data];
+        return [result];
       }
     });
   } else {
-    setOrder((prev: any) => [...prev, result]);
+    if (idx >= 0) {
+      setOrder((prev: any) => {
+        if (result.status === Order.NULL) {
+          return prev.filter((el: any) => el.field !== field);
+        } else {
+          const data = prev;
+          data[idx] = result;
+          return [...data];
+        }
+      });
+    } else {
+      setOrder((prev: any) => [...prev, result]);
+    }
   }
 
   return result;
@@ -1010,14 +1021,14 @@ export const checkAllLicenca = (licencas: any, dispatch: any) => {
       const dataLicenca = Date.parse(String(new Date(dt.ultimaLiberacao)));
 
       if (dataAtual > dataLicenca) {
-        // dispatch(
-        //   abrirMensagem({
-        //     mensagem:
-        //       'Licenças expiradas, entre em contato com seu represetante por favor',
-        //     tipo: TipoMensagem.INFO,
-        //     open: true,
-        //   }),
-        // );
+        dispatch(
+          abrirMensagem({
+            mensagem:
+              'Licenças expiradas, entre em contato com seu represetante por favor',
+            tipo: TipoMensagem.INFO,
+            open: true,
+          }),
+        );
       }
     });
   }
@@ -1215,12 +1226,26 @@ export const isEncrypted = (input: string) => {
 };
 
 export const paginacaoAplicativos = (array: []) => {
-  const chunkedArrays = []
+  const chunkedArrays = [];
 
   for (let i = 0; i < array.length; i += 10) {
-      const chunk = array.slice(i, i + 10)
-      chunkedArrays.push(chunk)
+    const chunk = array.slice(i, i + 10);
+    chunkedArrays.push(chunk);
   }
 
-  return chunkedArrays
-}
+  return chunkedArrays;
+};
+
+export const formatDateForOS = (data: string) => {
+  return DateTime.fromISO(data).toFormat('HH:mm');
+};
+
+export const toast = (dispatch: any, msg: string, tipo?: TipoMensagem) => {
+  return dispatch(
+    abrirMensagem({
+      open: true,
+      mensagem: msg,
+      tipo: tipo ? tipo : TipoMensagem.SUCESSO,
+    }),
+  );
+};

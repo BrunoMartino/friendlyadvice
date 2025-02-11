@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import RotasDashboard from '../pages/Rotas/RotasDashboard/RotasDashboard';
 import RotasCadastro from '../pages/Rotas/RotasCadastro/RotasCadastro';
 import RotasListagem from '../pages/Rotas/RotasListagem/RotasListagem';
-import RotasDashboard from '../pages/Rotas/RotasDashboard/RotasDashboard';
 
 const Routes: React.FC = () => {
   return (

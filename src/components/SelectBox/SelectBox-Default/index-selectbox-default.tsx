@@ -10,6 +10,7 @@ import {
   SelectList,
 } from './styles-selectbox-default';
 import { useDispatch, useSelector } from 'react-redux';
+// import { saveFilterSearch } from '../../../store/modules/Gestao/Controle/GerenciamentoVendasDiarias/FilterVendasDiarias/action';
 
 interface iSelectBoxDefault extends Omit<iInputFieldDefault, 'onChange'> {
   data?: any[];
@@ -92,9 +93,11 @@ const SelectBoxDefault: React.FC<iSelectBoxDefault> = ({
                       if (keyToSelect !== undefined) {
                         setSelected(item[`${keyToSelect}`]);
                         // handleSelect(item[`${keyToSelect}`]);
+                        // dispatch(saveFilterSearch(item[`${keyToSelect}`]));
                       } else {
                         setSelected(item);
                         // handleSelect(item);
+                        // dispatch(saveFilterSearch(item));
                       }
                     }}
                   >

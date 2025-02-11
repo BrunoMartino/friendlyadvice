@@ -11,50 +11,31 @@ import Button from '../../../components/Button/button-componente';
 import { Container, Content, AnimationContainer } from './styles';
 
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { useDispatch, useSelector } from 'react-redux';
-// import { abrirMensagem } from '../../../store/modules/Components/SnackBar/action';
-// import { TipoMensagem } from '../../../components/SnackBar/interface';
-// import ContainerSnackBar from '../../../components/ContainerSnackBar';
+import { useDispatch } from 'react-redux';
+import { abrirMensagem } from '../../../store/modules/Components/SnackBar/action';
+import { TipoMensagem } from '../../../components/SnackBar/interface';
 import trataExcecao from '../../../utils/tratamentoExcecao';
 import { Helmet } from 'react-helmet';
 import { backgroundInpera10, colorText } from '../../../utils/colorsInpera';
 import { logoPadraoCadastro } from '../../../utils/imagensPadrao';
-import { apiGenerica } from '../../../services/api';
-import { getTokenDashboard } from '../../../utils/fn';
-// import SnackbarDefault from '../../../components/SnackbarDefault';
+import { setEmpresaLicencas } from '../../../store/modules/Licencas/action';
+import SnackbarDefault from '../../../components/SnackbarDefault';
+import { checkIntegracaoesExpired } from '../../../store/modules/Gestao/Cadastros/Integracao/action';
 
 const SignIn: React.FC = () => {
+  const dispatch = useDispatch();
   const { signIn } = useAuth();
   const history = useHistory();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [initialState] = useState({ email: '', senha: '' });
 
-  const [dataSituacaoCofins, setDataSituacaoCofins] = useState<Array<{}>>([]);
-  const getSituacaoCofins = async () => {
-    try {
-      apiGenerica.defaults.headers.authorization = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJnbG9iYWxJZCI6ImZjY2RiMzQ2LTBkYWUtNGY1My05ZWJmLTg5ZDUxYzYyYjM0ZCIsInVzdWFyaW9JZCI6IjYxYjE3NTU1LTc2YzEtNDI0Yy1hOGE3LTBlMTBiNTRkMjQ4MyIsImxvY2FsIjoiQW1lcmljYS9TYW9fUGF1bG8iLCJ1c3VhcmlvUmVmSWQiOiI2MWIxNzU1NS03NmMxLTQyNGMtYThhNy0wZTEwYjU0ZDI0ODMiLCJ1c3VhcmlvTm9tZSI6Ikd1c3Rhdm8gVERQIiwidXN1YXJpb0VtYWlsIjoiZ3VzdGF2b0B0ZHAuY29tLmJyIiwia2V5IjoiYzQ1MDEwNTQtMzQ3ZC00MTQ0LWFkMDMtNWY4MWZjZDg3N2U0IiwiZW1wcmVzYUlkIjoiZTRmZGE4MGItZjJhZi00YzA0LWI2NTYtMzhiMWNlNjBiYjY3IiwiaWF0IjoxNzIzODM1NTg0LCJleHAiOjE3MjM4Nzg3ODR9.I1tXEhlmHtHw0fvnO2GWtyrX-dvHTo8BUK2WdQ1gRj0`;
-
-      const response = await apiGenerica.post('/api/sql', {
-        type: 'select',
-        sql: 'select "ID_TABGENERICADET" as "id", concat("TGD_CODIGO", \' - \', "TGD_DESCRICAO") as "descricao" from principal."TABGENERICADET" t where "deletedAt" is null and t."ID_TABGENERICA" = \'e2eb22ee-a80a-4277-99de-00536f489da9\'',
-      });
-
-      const data = response.data;
-
-      setDataSituacaoCofins(data.data);
-    } catch (err) {
-      console.error('Erro ao buscar CSOSN:', err);
-      return [];
-    }
-  };
-
-  useEffect(() => {
-    getSituacaoCofins();
-  }, []);
-
   const q = useLocation().search;
   const query = useMemo(() => new URLSearchParams(q), [q]);
+
+  useEffect(() => {
+    localStorage.removeItem('@MenuDigital:data');
+  }, [dispatch]);
 
   const formik = useFormik({
     initialValues: initialState,
@@ -66,18 +47,35 @@ const SignIn: React.FC = () => {
     setLoading(true);
     try {
       await signIn({
-        email: values.email.replaceAll(' ', ''),
+        email: values.email.replace(/\s/g, ''),
         senha: values.senha,
+      });
+      await dispatch({ type: 'RESET_REDUX' });
+      dispatch(setEmpresaLicencas(false)).then(async (licenca: any) => {
+        dispatch(checkIntegracaoesExpired());
+
+        if (licenca !== null) {
+          if (!query.get('menuaplicativo') && !query.get('rota')) {
+            dispatch(
+              abrirMensagem({
+                open: true,
+                mensagem: 'Login realizado com sucesso!',
+                tipo: TipoMensagem.SUCESSO,
+              }),
+            );
+            history.push('/listagem/OrdensDeServico');
+          }
+        }
       });
     } catch (err) {
       setLoading(false);
-      // dispatch(
-      //   abrirMensagem({
-      //     open: true,
-      //     mensagem: trataExcecao(err),
-      //     tipo: TipoMensagem.ERRO,
-      //   }),
-      // );
+      dispatch(
+        abrirMensagem({
+          open: true,
+          mensagem: trataExcecao(err),
+          tipo: TipoMensagem.ERRO,
+        }),
+      );
     }
   };
 
@@ -92,15 +90,28 @@ const SignIn: React.FC = () => {
 
   const dominioAtual = window.location?.ancestorOrigins[0];
 
+  const customIcon = () => {
+    switch (dominioAtual) {
+      default:
+        return (
+          <LazyLoadImage
+            src={logoPadraoCadastro}
+            className="LogoINPERA"
+            alt="INPERA Sistemas"
+          />
+        );
+    }
+  };
+
   return (
     <Container dominio={dominioAtual}>
       <Helmet>
         <style>{`body { background-color: ${backgroundInpera10} } `}</style>
       </Helmet>
-      {/* <ContainerSnackBar /> */}
-      {/* <SnackbarDefault /> */}
+      <SnackbarDefault />
       <Content>
         <AnimationContainer>
+          {customIcon()}
           <form className="form" onSubmit={formik.handleSubmit}>
             <div className="inputDiv">
               <Input
@@ -145,6 +156,14 @@ const SignIn: React.FC = () => {
                 Entrar
               </Button>
             </div>
+
+            <Link className="link" to="/esqueci-senha">
+              Esqueci minha senha
+            </Link>
+            <Link className="link" to="/preCadastro">
+              <FiLogIn />
+              Criar conta
+            </Link>
           </form>
         </AnimationContainer>
       </Content>

@@ -1,14 +1,17 @@
 import React from 'react';
 
-import { ModalProvider } from 'styled-react-modal';
-import { AuthProvider } from './auth';
-import { ThemeProvider } from './themeContext';
+import {ModalProvider} from 'styled-react-modal';
+import {AuthProvider} from './auth';
+import {ThemeProvider} from './themeContext';
+import {DataContextoGeral} from './DateContext';
 
-const AppProvider: React.FC = ({ children }) => (
+const AppProvider: React.FC = ({children}) => (
   <AuthProvider>
-    <ThemeProvider>
-      <ModalProvider>{children}</ModalProvider>
-    </ThemeProvider>
+    <DataContextoGeral>
+      <ThemeProvider>
+        <ModalProvider>{children}</ModalProvider>
+      </ThemeProvider>
+    </DataContextoGeral>
   </AuthProvider>
 );
 

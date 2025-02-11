@@ -5,6 +5,7 @@
   border: 0.1rem solid var(--border-grid);
   background-color: var(--background-grid);
   border-radius: 0;
+  z-index: 99999 !important;
 }
 .MuiAutocomplete-listbox {
   margin: 0rem 0rem;
@@ -72,8 +73,4 @@
   @media (max-width: 827px) {
     max-width: 98vw !important;
   }
-  
-  /* @media (max-width: 555px) {
-    max-width: 80vw !important;
-  } */
 }

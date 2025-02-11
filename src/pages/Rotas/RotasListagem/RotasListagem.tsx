@@ -1,31 +1,48 @@
 import React, { lazy, Suspense } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
-// import { TipoMensagem } from '../../../components/SnackBar/interface';
+import { TipoMensagem } from '../../../components/SnackBar/interface';
 
 import Spinner from '../../../components/Spinner/indexSpinner';
-// import { abrirMensagem } from '../../../store/modules/Components/SnackBar/action';
+import { abrirMensagem } from '../../../store/modules/Components/SnackBar/action';
 import { userIsLogged, validTokenAdministracao } from '../../../utils/fn';
+import OrderServiceContextProvevider from '../../../hooks/useServiceOrderContext';
 
-const ListagemDemo = lazy(
-  () => import('../../Gestao/Cadastros/Demo/ListagemDemo/indexListagemDemo'),
+const ListagemOrdensDeServico = lazy(
+  () =>
+    import(
+      '../../Gestao/Cadastros/OrdensDeServico/ListagemOrdensDeServico/indexListagemOrdensDeServico2'
+    ),
 );
 
 const RotasListagem: React.FC<any> = ({ match }) => {
+  const dispatch = useDispatch();
+  const integracaoFACILITE = useSelector(
+    (state: any) => state.global.empresaAdmin.integracaoFacilite,
+  );
+
+  const configuracoesEmpresa = useSelector(
+    (state: any) => state.global.configuracoesEmpresa.configuracoes,
+  );
+
   const validaToken_IntegracaoListagem = (validaIntegracao: boolean = true) => {
     if (
       (!userIsLogged('@INPERA:token_adm') && !userIsLogged('@INPERA:token')) ||
-      validaIntegracao
+      (validaIntegracao &&
+        integracaoFACILITE &&
+        configuracoesEmpresa &&
+        configuracoesEmpresa.precoDiferenciado === false)
     ) {
       if (localStorage.getItem('@INPERA:token_adm')) {
         validTokenAdministracao();
       }
-      // dispatch(
-      //   abrirMensagem({
-      //     open: true,
-      //     mensagem: 'Sessão Expirada, faça o login =D',
-      //     tipo: TipoMensagem.ERRO,
-      //   }),
-      // );
+      dispatch(
+        abrirMensagem({
+          open: true,
+          mensagem: 'Sessão Expirada, faça o login =D',
+          tipo: TipoMensagem.ERRO,
+        }),
+      );
       return false;
     } else if (
       userIsLogged('@INPERA:token_adm') ||
@@ -48,15 +65,16 @@ const RotasListagem: React.FC<any> = ({ match }) => {
     >
       <Switch>
         <Route
-          path={`${match.path}/demo`}
+          path={`${match.path}/OrdensDeServico`}
           exact
-          render={
-            () => <ListagemDemo />
-            // validaToken_IntegracaoListagem() ? (
-            //   <ListagemDemo />
-            // ) : (
-            //   <Redirect to="/" />
-            // )
+          render={() =>
+            validaToken_IntegracaoListagem(false) ? (
+              <OrderServiceContextProvevider>
+                <ListagemOrdensDeServico />
+              </OrderServiceContextProvevider>
+            ) : (
+              <Redirect to="/" />
+            )
           }
         />
       </Switch>

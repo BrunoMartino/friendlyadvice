@@ -74,6 +74,10 @@ export default createGlobalStyle`
     scroll-behavior: smooth;
     font-family: 'Source Sans Pro', sans-serif;
 
+    .MuiAutocomplete-popper {
+      z-index: 9999999;
+    }
+
     ::-webkit-scrollbar-track {
        background-color: #1b1e25;
      }
@@ -100,6 +104,8 @@ export default createGlobalStyle`
 
   html {
     font-size: 62.5%;
+
+    
   }
 
   body {
@@ -117,11 +123,6 @@ export default createGlobalStyle`
         width: 100vw;
       }
     }
-
-    .bPIyfm {
-      position: fixed;
-    }
-
   }
 
   .disableScrollbar {

@@ -19,5 +19,4 @@ export interface PropsAlert {
   tipo: TipoMensagem;
   posicao?: TipoPosicao;
   personalTime?: number;
-  setCloseToast: () => void
 }

@@ -1,10 +1,23 @@
 import { useState, useCallback, useEffect } from 'react';
 import React from 'react';
-import { Container, ContainerInput, CapsLockContainer } from './stylesInputMascara';
+import {
+  Container,
+  ContainerInput,
+  CapsLockContainer,
+} from './stylesInputMascara';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 
 const InputMascaras: React.FC<any> = React.forwardRef(
-  ({ activeCaps = true, disabled, ...props }, ref) => {
+  (
+    {
+      activeCaps = true,
+      disabled,
+      backgroundColor,
+      readOnly = false,
+      ...props
+    },
+    ref,
+  ) => {
     const EVENT_KEY_DOWN = 'keydown';
     const EVENT_KEY_UP = 'keyup';
 
@@ -54,19 +67,24 @@ const InputMascaras: React.FC<any> = React.forwardRef(
           autoComplete="off"
           type={isPassword ? mostrarSenha : props.type}
           ref={ref}
-          style={{
-            opacity: disabled ? 0.5 : 1,
-          }}
-          disabled={ disabled }
+          backgroundColor={backgroundColor}
+          style={{ opacity: disabled ? 0.5 : 1, ...props.styleInput }}
+          disabled={disabled}
+          readOnly={readOnly}
         />
-
         {isPassword && (
-          <button style={{ ...props.style }} tabIndex={-1} type="button" onClick={cliqueMostrarSenha}>
+          <button
+            style={{ ...props.style }}
+            tabIndex={-1}
+            type="button"
+            onClick={cliqueMostrarSenha}
+          >
             {mostrarSenha === 'password' ? <FiEye /> : <FiEyeOff />}
           </button>
         )}
-
-        {activeCaps && caps && isPassword && (<CapsLockContainer>CapsLock Ativado</CapsLockContainer>)}
+        {activeCaps && caps && isPassword && (
+          <CapsLockContainer>CapsLock Ativado</CapsLockContainer>
+        )}
       </Container>
     );
   },

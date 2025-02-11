@@ -1,18 +1,32 @@
 import React, { lazy, Suspense } from 'react';
+import { useSelector } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router';
 
 import Spinner from '../../../components/Spinner/indexSpinner';
 import { userIsLogged, validTokenAdministracao } from '../../../utils/fn';
 
-const CadastroDemo = lazy(
-  () => import('../../Gestao/Cadastros/Demo/CadastroDemo/indexCadastroDemo'),
+const CadastroOrdemServico = lazy(
+  () =>
+    import(
+      '../../Gestao/Cadastros/OrdensDeServico/CadastroOrdemServico/indexCadastroOrdemServico'
+    ),
 );
 
 const RotasCadastro: React.FC<any> = ({ match }) => {
+  const integracaoFACILITE = useSelector(
+    (state: any) => state.global.empresaAdmin.integracaoFacilite,
+  );
+  const configuracoesEmpresa = useSelector(
+    (state: any) => state.global.configuracoesEmpresa.configuracoes,
+  );
+
   const validaToken_IntegracaoCadastro = (validaIntegracao: boolean = true) => {
     if (
       (!userIsLogged('@INPERA:token_adm') && !userIsLogged('@INPERA:token')) ||
-      validaIntegracao
+      (validaIntegracao &&
+        integracaoFACILITE &&
+        configuracoesEmpresa &&
+        configuracoesEmpresa.precoDiferenciado === false)
     ) {
       if (localStorage.getItem('@INPERA:token_adm')) {
         validTokenAdministracao();
@@ -36,17 +50,15 @@ const RotasCadastro: React.FC<any> = ({ match }) => {
       fallback={<Spinner text="Aguarde, estamos carregando os dados :D" />}
     >
       <Switch>
-        {/* Rotas Cadastros */}
         <Route
-          path={`${match.path}/demo`}
+          path={`${match.path}/ordem-servico`}
           exact
-          render={
-            () => <CadastroDemo />
-            // validaToken_IntegracaoCadastro() ? (
-            //   <CadastroDemo />
-            // ) : (
-            //   <Redirect to="/" />
-            // )
+          render={() =>
+            validaToken_IntegracaoCadastro(false) ? (
+              <CadastroOrdemServico />
+            ) : (
+              <Redirect to="/" />
+            )
           }
         />
       </Switch>
