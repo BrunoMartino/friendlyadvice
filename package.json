@@ -59,14 +59,13 @@
     "socket.io-client": "^3.1.1",
     "styled-components": "^5.1.0",
     "styled-react-modal": "^2.0.1",
-    "typescript": "^3.8.0",
     "tz-offset": "0.0.2",
     "use-react-modal": "0.0.9",
     "uuidv4": "^6.0.7",
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "json": "json-server --watch db.json --port 3005",
     "build": "rimraf build && set \"GENERATE_SOURCEMAP=false\" && react-scripts build && javascript-obfuscator ./build/static --output ./build/static --config obfuscator.js && git add . && git commit -m \"Build for INPERA sprint 25\" && git push",
     "buildTeste": "rimraf build && set \"GENERATE_SOURCEMAP=false\" && react-scripts build && git add . && git commit -m \"Build for TdpInformatica\" && git push",
@@ -186,7 +185,6 @@
     "axios-mock-adapter": "^1.18.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.4",
-    "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-import-resolver-typescript": "^2.0.0",
@@ -198,6 +196,7 @@
     "jest-localstorage-mock": "^2.4.3",
     "prettier": "^2.0.4",
     "react-test-renderer": "^16.13.1",
-    "redux-devtools-extension": "^2.13.9"
+    "redux-devtools-extension": "^2.13.9",
+    "typescript": "^5.7.3"
   }
 }
