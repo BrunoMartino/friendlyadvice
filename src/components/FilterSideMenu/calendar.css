@@ -1,0 +1,22 @@
+.react-datepicker {
+  font-size: 2rem !important;
+}
+
+.react-datepicker__current-month {
+  font-size: 2rem !important;
+  text-transform: capitalize !important;
+}
+
+.react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
+  width: 3.7rem !important;
+  line-height: 2.7rem !important;
+}
+/*.dayXpP*/
+.content-div > .item .react-datepicker {
+  width: 29.2rem !important;
+}
+
+/*.dayXpP*/
+.content-div > .item .react-datepicker__month-container {
+  width: 28.8rem !important;
+}

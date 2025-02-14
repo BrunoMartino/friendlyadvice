@@ -1,0 +1,76 @@
+.MuiAutocomplete-popper {
+  margin: 0rem 0rem;
+  padding: 0rem 0rem;
+  border-radius: 0;
+  border: 0.1rem solid var(--border-grid);
+  background-color: var(--background-grid);
+  border-radius: 0;
+  z-index: 99999 !important;
+}
+.MuiAutocomplete-listbox {
+  margin: 0rem 0rem;
+  padding: 0rem 0rem;
+  border-radius: 0;
+  background-color: var(--background-grid);
+}
+
+.MuiAutocomplete-listbox:hover {
+  margin: 0rem 0rem;
+  padding: 0rem 0rem;
+  border-radius: 0;
+  background-color: var(--backgroundInpera10);
+}
+
+.MuiAutocomplete-option[aria-selected='true'] {
+  background-color: var(--backgroundInpera45) !important;
+}
+
+.MuiAutocomplete-option {
+  padding: 0.5rem 0;
+  margin: 0rem 0rem;
+  color: var(--color-cabecalho-pedido);
+  font-size: 1.5rem;
+  background-color: var(--background-grid);
+  border-radius: 0;
+}
+
+.MuiAutocomplete-option:hover {
+  margin: 0rem 0rem;
+  border-radius: 0;
+}
+
+.MuiAutocomplete-noOptions {
+  color: var(--color-cabecalho-pedido);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.MuiAutocomplete-endAdornment {
+  top: calc(2.7rem - 2.4rem) !important;
+  display: flex;
+  justify-content: center;
+
+  right: 0 !important;
+  width: 5rem !important;
+}
+
+.MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root']
+  .MuiAutocomplete-input {
+  padding: 0;
+  margin: 0;
+}
+
+.MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root']
+  .MuiAutocomplete-input:first-child {
+  padding-left: 0 !important;
+}
+
+.marginComponente {
+  margin-top: 0.5rem;
+}
+
+.MuiAutocomplete-hasPopupIcon.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] {
+  @media (max-width: 827px) {
+    max-width: 98vw !important;
+  }
+}

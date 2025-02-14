@@ -1,0 +1,15 @@
+.btnAdd {
+  display: flex;
+  height: 3.5rem;
+  width: 100%;
+  border: none;
+  font-size: 1.6rem;
+  color: white;
+  align-items: center;
+  border-radius: 0.3rem;
+  justify-content: center;
+}
+
+.btnAdd:hover {
+  box-shadow: 0.1rem 0.1rem #999;
+}

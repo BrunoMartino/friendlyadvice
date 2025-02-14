@@ -1,0 +1,13 @@
+.MuiAlert-message {
+  display: flex;
+  font-size: 1.6rem;
+  align-items: center;
+}
+
+.MuiAlert-icon svg {
+  font-size: 3rem;
+}
+
+.MuiAlert-action svg {
+  font-size: 3rem;
+}

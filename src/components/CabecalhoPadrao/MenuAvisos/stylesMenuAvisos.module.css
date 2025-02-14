@@ -1,0 +1,239 @@
+.container {
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  top: 7.539rem;
+  left: auto;
+  right: 0rem;
+  align-items: center;
+  width: 40rem;
+  height: 100vh;
+
+  /* border-radius: 1rem; */
+  color: var(--color-Text);
+
+  z-index: 10000;
+  background-color: #f8f6f2;
+  /* padding: 1.5rem; */
+  box-shadow: 0.4rem 0 2rem rgba(86, 79, 82, 0.3);
+}
+
+.mainContainerMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.msgContainer {
+  display: flex;
+  flex-direction: column;
+  height: 70%;
+  width: 100%;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.msgContainer::-webkit-scrollbar {
+  width: 0rem;
+}
+
+.containerNoData {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.notificationCard {
+  display: flex;
+  align-items: start;
+  gap: 1.5rem;
+  width: 100%;
+  /* height: 100rem; */
+  border-bottom: 0.1rem solid #e4e0dd;
+  padding: 1.5rem 2.5rem;
+  /* border-radius: 0.5rem; */
+  cursor: pointer;
+}
+
+.notificationCard:hover {
+  background-color: #f2b05e1a !important;
+}
+
+.mensagem {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  font-size: 1.5rem;
+  color: var(--color-Text);
+  font-weight: 500;
+}
+
+.mensagem .created {
+  font-size: 1.3rem;
+  color: #df8f2ea3;
+  font-weight: 600;
+}
+
+.botaoConfirmar {
+  display: flex;
+  flex-direction: column;
+  width: 7rem;
+  align-items: center;
+  justify-content: center;
+  background: rgba(208, 148, 75, 0.5);
+  cursor: pointer;
+}
+
+.botaoConfirmar:hover {
+  background: rgba(208, 148, 75, 0.7);
+}
+
+.iconeBotaoConfirmar {
+  font-size: 2.5rem;
+  color: var(--color-Text);
+}
+
+.titulo {
+  display: flex;
+  width: 100%;
+  height: 10%;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  color: white;
+  /* margin-bottom: 1rem; */
+  padding: 0 2.5rem;
+}
+
+.textoTitulo {
+  font-size: 1.9rem;
+  color: var(--color-Text);
+  font-weight: bold;
+}
+
+.textoBotaoConfirmar {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--color-Text);
+}
+
+.checkAllRead {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: #564f5280;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: 300ms ease-in-out;
+}
+
+.checkAllRead:hover {
+  color: #564f52;
+}
+
+@keyframes notificationNotRead {
+  0% {
+    background-color: #f8e4cb;
+  }
+
+  100% {
+    background-color: #fca53b;
+  }
+}
+
+.sectionNotRead {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  height: 100%;
+}
+
+.sectionNotRead .text {
+  color: #fca53b;
+  padding-top: 1rem;
+  font-size: 1.1rem;
+  text-shadow: 0.1rem 0.1rem 0.2rem var(--backgroundLightSecundary_gray);
+}
+
+.sectionNotRead .notRead {
+  display: flex;
+  align-self: center;
+
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-top: 0.8rem;
+  border-radius: 50%;
+  background-color: #fca53b;
+  animation-name: notificationNotRead;
+  animation-duration: 1s;
+  box-shadow: 0.1rem 0rem 1rem #fca53b;
+  /* animation-timing-function: cubic-bezier(0, 0.99, 0.68, 0.69); */
+}
+
+.footer {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.1rem;
+  padding: 1.5rem 2.5rem;
+
+  height: 20%;
+  width: 100%;
+}
+
+.footer span {
+  font-size: 1.4rem;
+  color: #df8f2e;
+  cursor: pointer;
+}
+
+.seeAllLink {
+  font-size: 1.4rem;
+  color: #df8f2e;
+  cursor: pointer;
+}
+
+@media (max-width: 59.9375em) {
+  .container {
+    margin-left: calc(100vw - 42rem);
+  }
+}
+
+@media (max-width: 26.5625rem) {
+  .container {
+    width: 100%;
+    /* height: 100%; */
+    margin-left: calc(100vw - 32rem);
+  }
+
+  .cardItem {
+    width: 28rem;
+  }
+
+  .mensagem {
+    font-size: 1.1rem;
+  }
+}
+
+/* @media (max-width: 20.3125rem) {
+  .container {
+    width: 25rem;
+    margin-left: calc(100vw - 27rem);
+  }
+
+  .cardItem {
+    width: 23rem;
+  }
+
+  .mensagem {
+    font-size: 1rem;
+  }
+} */
