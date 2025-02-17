@@ -13,7 +13,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+<<<<<<< HEAD
     "jsx": "react-jsx",
+=======
+    "jsx": "react",
+>>>>>>> 315925569e64db1c822509353a5a351980cbeb0d
     "sourceMap": true,
     "removeComments": true
   },
