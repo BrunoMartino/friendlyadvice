@@ -61,6 +61,7 @@ const PaginacaoFlutter = forwardRef(
       shouldLimit,
       sqlToExecute,
     }: IHandleFiltrar) => {
+      console.log(sqlToExecute);
       try {
         let finalSql = sqlToExecute;
 
@@ -139,7 +140,8 @@ const PaginacaoFlutter = forwardRef(
           <IoIosArrowBack />
         </button>
         <span>
-          Página {ctx.page + 1} de {Math.max(1, Math.ceil(ctx.pagesTotal / limitToShow))}
+          Página {ctx.page + 1} de{' '}
+          {Math.max(1, Math.ceil(ctx.pagesTotal / limitToShow))}
         </span>
         <button
           onClick={handleClickNext}
